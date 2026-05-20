@@ -1,16 +1,5 @@
 export const BRANDING_QUESTIONS = [
   {
-    id: 'timeline',
-    question: "What is the client's timeline expectation?",
-    hint: 'Affects rush pricing multiplier',
-    options: [
-      { label: 'Relaxed — no hard deadline', value: 'relaxed', complexityPoints: 0, riskPoints: 0, rush: 'relaxed' },
-      { label: 'Moderate — 6–8 weeks', value: 'moderate', complexityPoints: 5, riskPoints: 5, rush: 'moderate' },
-      { label: 'Urgent — 3–4 weeks', value: 'urgent', complexityPoints: 15, riskPoints: 20, rush: 'urgent' },
-      { label: 'ASAP — under 2 weeks', value: 'asap', complexityPoints: 25, riskPoints: 35, rush: 'asap' },
-    ],
-  },
-  {
     id: 'existing_brand',
     question: 'Does the client have an existing brand to reference or evolve from?',
     options: [
@@ -49,12 +38,13 @@ export const BRANDING_QUESTIONS = [
     ],
   },
   {
-    id: 'touchpoints',
-    question: 'What brand touchpoints are required?',
+    id: 'scope_fit',
+    question: 'Does the project brief fit within the selected package scope?',
+    hint: 'Helps identify scope creep risk before it starts',
     options: [
-      { label: 'Logo only — mark and wordmark', value: 'logo', complexityPoints: 0, riskPoints: 0 },
-      { label: 'Core set — logo, colour, type, usage', value: 'core', complexityPoints: 10, riskPoints: 5 },
-      { label: 'Full system — complete brand guidelines', value: 'full', complexityPoints: 25, riskPoints: 10 },
+      { label: 'Yes — brief matches the package exactly', value: 'fits', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Mostly — minor extras may come up', value: 'mostly', complexityPoints: 10, riskPoints: 10 },
+      { label: 'Stretching it — scope feels bigger than the package', value: 'stretching', complexityPoints: 20, riskPoints: 25 },
     ],
   },
   {
@@ -86,27 +76,16 @@ export const BRANDING_QUESTIONS = [
   },
   {
     id: 'budget_status',
-    question: 'Has the client disclosed or indicated a budget?',
+    question: 'Has the client acknowledged and accepted the package price?',
     options: [
-      { label: 'Yes — aligns well with our rates', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
-      { label: 'Yes — feels tight or below market', value: 'tight', complexityPoints: 0, riskPoints: 20 },
-      { label: 'No budget mentioned yet', value: 'none', complexityPoints: 0, riskPoints: 25 },
+      { label: 'Yes — price agreed and comfortable', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Yes — but they seem hesitant about the cost', value: 'tight', complexityPoints: 0, riskPoints: 20 },
+      { label: 'Not yet discussed in full', value: 'none', complexityPoints: 0, riskPoints: 25 },
     ],
   },
 ]
 
 export const WEB_QUESTIONS = [
-  {
-    id: 'timeline',
-    question: "What is the client's timeline expectation?",
-    hint: 'Affects rush pricing multiplier',
-    options: [
-      { label: 'Relaxed — no hard deadline', value: 'relaxed', complexityPoints: 0, riskPoints: 0, rush: 'relaxed' },
-      { label: 'Moderate — 8–12 weeks', value: 'moderate', complexityPoints: 5, riskPoints: 5, rush: 'moderate' },
-      { label: 'Urgent — 4–6 weeks', value: 'urgent', complexityPoints: 15, riskPoints: 20, rush: 'urgent' },
-      { label: 'ASAP — under 3 weeks', value: 'asap', complexityPoints: 25, riskPoints: 35, rush: 'asap' },
-    ],
-  },
   {
     id: 'scope_size',
     question: 'What is the scope and scale of the site?',
@@ -181,26 +160,34 @@ export const WEB_QUESTIONS = [
     ],
   },
   {
-    id: 'budget_status',
-    question: 'Has the client disclosed or indicated a budget?',
+    id: 'client_experience',
+    question: 'How experienced is the client with design processes?',
     options: [
-      { label: 'Yes — aligns well with our rates', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
-      { label: 'Yes — feels tight or below market', value: 'tight', complexityPoints: 0, riskPoints: 20 },
-      { label: 'No budget mentioned', value: 'none', complexityPoints: 0, riskPoints: 25 },
+      { label: 'Design-savvy — knows the drill', value: 'savvy', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Moderate — some past experience', value: 'moderate', complexityPoints: 5, riskPoints: 10 },
+      { label: 'New to it — needs hand-holding', value: 'new', complexityPoints: 10, riskPoints: 20 },
+    ],
+  },
+  {
+    id: 'budget_status',
+    question: 'Has the client acknowledged and accepted the project price?',
+    options: [
+      { label: 'Yes — price agreed and comfortable', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Yes — but they seem hesitant about the cost', value: 'tight', complexityPoints: 0, riskPoints: 20 },
+      { label: 'Not yet discussed in full', value: 'none', complexityPoints: 0, riskPoints: 25 },
     ],
   },
 ]
 
 export const SOCIAL_QUESTIONS = [
   {
-    id: 'timeline',
-    question: 'What is the starting timeline?',
-    hint: 'Affects rush pricing multiplier',
+    id: 'commitment_agreed',
+    question: 'Has the minimum 3-month commitment been discussed and agreed?',
+    hint: 'All packages require a minimum 3-month engagement',
     options: [
-      { label: 'Relaxed — 4+ weeks to prepare', value: 'relaxed', complexityPoints: 0, riskPoints: 0, rush: 'relaxed' },
-      { label: 'Moderate — 2–3 weeks', value: 'moderate', complexityPoints: 5, riskPoints: 5, rush: 'moderate' },
-      { label: 'Urgent — 1 week', value: 'urgent', complexityPoints: 15, riskPoints: 20, rush: 'urgent' },
-      { label: 'ASAP — starting immediately', value: 'asap', complexityPoints: 25, riskPoints: 35, rush: 'asap' },
+      { label: 'Yes — client is comfortable with 3 months', value: 'agreed', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Mentioned but not yet confirmed', value: 'pending', complexityPoints: 0, riskPoints: 15 },
+      { label: 'Not discussed yet', value: 'no', complexityPoints: 0, riskPoints: 30 },
     ],
   },
   {
@@ -213,39 +200,12 @@ export const SOCIAL_QUESTIONS = [
     ],
   },
   {
-    id: 'posts_per_week',
-    question: 'How many posts per week are expected?',
-    options: [
-      { label: '1–3 posts', value: '1-3', complexityPoints: 0, riskPoints: 0 },
-      { label: '4–7 posts', value: '4-7', complexityPoints: 15, riskPoints: 10 },
-      { label: '8+ posts', value: '8+', complexityPoints: 30, riskPoints: 15 },
-    ],
-  },
-  {
-    id: 'content_creation',
-    question: 'What level of content creation is required?',
-    options: [
-      { label: 'Templates only — client populates content', value: 'templates', complexityPoints: 0, riskPoints: 10 },
-      { label: 'Mixed — templates plus some original content', value: 'mixed', complexityPoints: 15, riskPoints: 5 },
-      { label: 'Full — all content created by us', value: 'full', complexityPoints: 30, riskPoints: 0 },
-    ],
-  },
-  {
     id: 'strategy_depth',
     question: 'What level of social strategy is needed?',
     options: [
       { label: 'None — straight into execution', value: 'none', complexityPoints: 0, riskPoints: 20 },
       { label: 'Basic — platform and tone guidance', value: 'basic', complexityPoints: 5, riskPoints: 10 },
       { label: 'Full — audit, personas, content pillars, KPIs', value: 'full', complexityPoints: 20, riskPoints: 0 },
-    ],
-  },
-  {
-    id: 'reporting',
-    question: 'What reporting and analytics are required?',
-    options: [
-      { label: 'None — client tracks themselves', value: 'none', complexityPoints: 0, riskPoints: 10 },
-      { label: 'Monthly — summary report', value: 'monthly', complexityPoints: 5, riskPoints: 0 },
-      { label: 'Weekly — detailed performance reports', value: 'weekly', complexityPoints: 20, riskPoints: 0 },
     ],
   },
   {
@@ -267,6 +227,15 @@ export const SOCIAL_QUESTIONS = [
     ],
   },
   {
+    id: 'reporting',
+    question: 'What reporting and analytics are required?',
+    options: [
+      { label: 'Monthly summary — included in package', value: 'monthly', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Weekly — detailed performance reports', value: 'weekly', complexityPoints: 15, riskPoints: 0 },
+      { label: 'None — client tracks themselves', value: 'none', complexityPoints: 0, riskPoints: 10 },
+    ],
+  },
+  {
     id: 'paid_ads',
     question: 'Is paid social / ad management included?',
     options: [
@@ -276,12 +245,30 @@ export const SOCIAL_QUESTIONS = [
     ],
   },
   {
-    id: 'budget_status',
-    question: 'Has the client disclosed a budget or retainer expectation?',
+    id: 'client_history',
+    question: 'Has the client worked with a social media agency before?',
     options: [
-      { label: 'Yes — aligns well with our rates', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
-      { label: 'Yes — feels tight or below market', value: 'tight', complexityPoints: 0, riskPoints: 20 },
-      { label: 'No budget mentioned', value: 'none', complexityPoints: 0, riskPoints: 25 },
+      { label: 'Yes — they understand agency workflows', value: 'yes', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Partially — some experience', value: 'partial', complexityPoints: 5, riskPoints: 10 },
+      { label: 'No — first time working with an agency', value: 'no', complexityPoints: 10, riskPoints: 20 },
+    ],
+  },
+  {
+    id: 'decision_makers',
+    question: 'How many people are involved in content approvals?',
+    options: [
+      { label: 'One — clear single point of contact', value: '1', complexityPoints: 0, riskPoints: 0 },
+      { label: '2–3 — small team', value: '2-3', complexityPoints: 10, riskPoints: 15 },
+      { label: '4 or more — committee approvals', value: '4+', complexityPoints: 20, riskPoints: 30 },
+    ],
+  },
+  {
+    id: 'budget_status',
+    question: 'Has the client acknowledged and accepted the monthly retainer price?',
+    options: [
+      { label: 'Yes — price agreed and comfortable', value: 'aligned', complexityPoints: 0, riskPoints: 0 },
+      { label: 'Yes — but they seem hesitant about the cost', value: 'tight', complexityPoints: 0, riskPoints: 20 },
+      { label: 'Not yet discussed in full', value: 'none', complexityPoints: 0, riskPoints: 25 },
     ],
   },
 ]

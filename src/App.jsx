@@ -24,20 +24,21 @@ export default function App() {
 
   function handleWizardComplete(finalAnswers) {
     const questions = getQuestions(selectedCategory)
-    const { complexityScore, riskScore, rushValue } = calculateScores(finalAnswers, questions)
+    const { complexityScore, riskScore } = calculateScores(finalAnswers, questions)
     const pricing = calculatePricing({
-      complexityScore,
-      riskScore,
-      rushValue,
+      fixedPrice: selectedService.fixedPrice,
+      fromPrice: selectedService.fromPrice,
+      monthly: selectedService.monthly,
+      minCommitment: selectedService.minCommitment,
       minDays: selectedService.minDays,
       maxDays: selectedService.maxDays,
     })
     const paymentStructure = getPaymentStructure(riskScore)
-    const flags = generateFlags(finalAnswers, selectedCategory)
-    const marginWarnings = generateMarginWarnings(pricing, finalAnswers)
+    const flags = generateFlags(finalAnswers, selectedCategory, selectedService.id)
+    const marginWarnings = generateMarginWarnings(finalAnswers, selectedService)
     const clientFit = calculateClientFit(finalAnswers)
     const upsells = generateUpsells(finalAnswers, selectedCategory, selectedService.id)
-    const checklist = generateChecklist(finalAnswers, selectedCategory, paymentStructure, riskScore)
+    const checklist = generateChecklist(finalAnswers, selectedCategory, selectedService, paymentStructure, riskScore)
     const scopeCreepRisk = getScopeCreepRisk(finalAnswers)
 
     setAnswers(finalAnswers)
@@ -48,7 +49,6 @@ export default function App() {
       complexityLevel: getComplexityLevel(complexityScore),
       riskLevel: getRiskLevel(riskScore),
       scopeCreepRisk,
-      rushValue,
       flags,
       marginWarnings,
       paymentStructure,

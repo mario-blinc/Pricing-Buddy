@@ -1,7 +1,6 @@
 export function calculateScores(answers, questions) {
   let totalComplexity = 0
   let totalRisk = 0
-  let rushValue = 'relaxed'
 
   const maxComplexity = questions.reduce((sum, q) => {
     return sum + Math.max(...q.options.map(o => o.complexityPoints || 0))
@@ -18,13 +17,12 @@ export function calculateScores(answers, questions) {
     if (!option) return
     totalComplexity += option.complexityPoints || 0
     totalRisk += option.riskPoints || 0
-    if (option.rush) rushValue = option.rush
   })
 
   const complexityScore = Math.min(100, Math.round((totalComplexity / maxComplexity) * 100))
   const riskScore = Math.min(100, Math.round((totalRisk / maxRisk) * 100))
 
-  return { complexityScore, riskScore, rushValue }
+  return { complexityScore, riskScore }
 }
 
 export function getComplexityLevel(score) {

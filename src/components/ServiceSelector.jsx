@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { CATEGORIES, SERVICES } from '../data/services'
 
+function formatPrice(service) {
+  const p = `£${service.fixedPrice.toLocaleString()}`
+  if (service.monthly) return `${p} / month`
+  if (service.fromPrice) return `from ${p}`
+  return p
+}
+
 export default function ServiceSelector({ onSelect }) {
   const [activeCategory, setActiveCategory] = useState(null)
 
@@ -55,12 +62,8 @@ export default function ServiceSelector({ onSelect }) {
                   onClick={() => handleServiceClick(service)}
                 >
                   <span className="service-name">{service.label}</span>
-                  <span className="service-meta">
-                    {service.minDays}–{service.maxDays} days base
-                  </span>
-                  <span className="service-range">
-                    from £{(service.minDays * 750).toLocaleString()}
-                  </span>
+                  <span className="service-meta">{service.tagline}</span>
+                  <span className="service-range">{formatPrice(service)}</span>
                   <span className="service-arrow">Start assessment →</span>
                 </button>
               ))}

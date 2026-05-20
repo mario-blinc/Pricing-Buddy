@@ -2,17 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 
 const FLAG_COLORS = {
   critical: { bg: '#fef2f2', border: '#fca5a5', text: '#b91c1c', dot: '#ef4444' },
-  high: { bg: '#fff7ed', border: '#fdba74', text: '#c2410c', dot: '#f97316' },
-  medium: { bg: '#fefce8', border: '#fde047', text: '#a16207', dot: '#eab308' },
-  low: { bg: '#f0fdf4', border: '#86efac', text: '#15803d', dot: '#22c55e' },
+  high:     { bg: '#fff7ed', border: '#fdba74', text: '#c2410c', dot: '#f97316' },
+  medium:   { bg: '#fefce8', border: '#fde047', text: '#a16207', dot: '#eab308' },
+  low:      { bg: '#f0fdf4', border: '#86efac', text: '#15803d', dot: '#22c55e' },
 }
 
 const LEVEL_COLORS = {
-  low: '#22c55e',
-  medium: '#eab308',
-  high: '#f97316',
-  extreme: '#ef4444',
-  critical: '#ef4444',
+  low: '#22c55e', medium: '#eab308', high: '#f97316', extreme: '#ef4444', critical: '#ef4444',
 }
 
 function fmt(n) {
@@ -65,26 +61,30 @@ function FlagBadge({ flag }) {
   )
 }
 
-function buildExport({ service, category, results }) {
-  const r = results
-  const line = (c, n = 40) => c.padEnd(n, '─')
+function buildExport({ service, category, results: r }) {
+  const line = (c) => c.padEnd(42, '─')
+  const priceDisplay = r.monthly
+    ? `${fmt(r.recommended)} / month (min. ${r.minCommitment} months = ${fmt(r.minTotal)})`
+    : r.fromPrice
+      ? `from ${fmt(r.recommended)}`
+      : fmt(r.recommended)
+
   const lines = [
     'BLINC PRICING ESTIMATE',
     '══════════════════════════════════════════',
-    `Service: ${service.label}`,
+    `Service:  ${service.label}`,
     `Category: ${category.charAt(0).toUpperCase() + category.slice(1)}`,
-    `Generated: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+    `Date:     ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`,
     '',
-    line('PRICING '),
-    `Recommended:      ${fmt(r.recommended)}`,
-    `Range:            ${fmt(r.minPrice)} – ${fmt(r.maxPrice)}`,
-    `Effort:           ${r.effortDays} days`,
-    `Timeline:         ${r.timelineWeeks} weeks`,
+    line('PRICE '),
+    `Package price:  ${priceDisplay}`,
+    `Effort:         ~${r.effortDays} days`,
+    `Timeline:       ~${r.timelineWeeks} weeks`,
     '',
     line('SCORES '),
     `Complexity:       ${r.complexityScore}/100 (${r.complexityLevel})`,
     `Risk:             ${r.riskScore}/100 (${r.riskLevel})`,
-    `Scope Creep Risk: ${r.scopeCreepRisk}`,
+    `Scope creep risk: ${r.scopeCreepRisk}`,
     '',
     line('FLAGS '),
   ]
@@ -92,9 +92,7 @@ function buildExport({ service, category, results }) {
   if (r.flags.length === 0) {
     lines.push('No issues identified')
   } else {
-    r.flags.forEach(f => {
-      lines.push(`[${f.level.toUpperCase()}] ${f.category}: ${f.message}`)
-    })
+    r.flags.forEach(f => lines.push(`[${f.level.toUpperCase()}] ${f.category}: ${f.message}`))
   }
 
   if (r.marginWarnings.length > 0) {
@@ -105,7 +103,7 @@ function buildExport({ service, category, results }) {
 
   lines.push('')
   lines.push(line('CLIENT FIT '))
-  lines.push(`Score: ${r.clientFit.score}/10 — ${r.clientFit.label}`)
+  lines.push(`${r.clientFit.score}/10 — ${r.clientFit.label}`)
 
   lines.push('')
   lines.push(line('PAYMENT STRUCTURE '))
@@ -141,6 +139,8 @@ export default function ResultsDashboard({ service, category, results: r, onRese
   const scopeColors = { low: '#22c55e', medium: '#eab308', high: '#ef4444' }
   const fitColor = r.clientFit.score >= 7 ? '#22c55e' : r.clientFit.score >= 5 ? '#eab308' : '#ef4444'
 
+  const priceLabel = r.monthly ? '/ month' : r.fromPrice ? 'from' : null
+
   return (
     <div className="results-screen">
       <header className="results-header">
@@ -158,42 +158,32 @@ export default function ResultsDashboard({ service, category, results: r, onRese
         {/* Price Hero */}
         <section className="results-card results-hero">
           <div className="hero-recommended">
-            <span className="hero-label">Recommended price</span>
+            {priceLabel === 'from' && <span className="hero-from-label">from</span>}
             <span className="hero-price">{fmt(r.recommended)}</span>
+            {priceLabel === '/ month' && <span className="hero-suffix">/ month</span>}
           </div>
-          <div className="hero-grid">
-            <div className="hero-stat">
-              <span className="stat-label">Min</span>
-              <span className="stat-value">{fmt(r.minPrice)}</span>
+
+          {r.monthly && r.minTotal && (
+            <div className="hero-commitment">
+              Min. {r.minCommitment} months · Total commitment {fmt(r.minTotal)}
             </div>
-            <div className="hero-divider" />
-            <div className="hero-stat">
-              <span className="stat-label">Max</span>
-              <span className="stat-value">{fmt(r.maxPrice)}</span>
-            </div>
-            <div className="hero-divider" />
+          )}
+
+          <div className="hero-grid hero-grid--simple">
             <div className="hero-stat">
               <span className="stat-label">Effort</span>
-              <span className="stat-value">{r.effortDays}d</span>
+              <span className="stat-value">~{r.effortDays} days</span>
             </div>
             <div className="hero-divider" />
             <div className="hero-stat">
               <span className="stat-label">Timeline</span>
-              <span className="stat-value">{r.timelineWeeks}w</span>
+              <span className="stat-value">~{r.timelineWeeks} weeks</span>
             </div>
-          </div>
-          <div className="hero-meta">
-            <span className="meta-pill">
-              Rush: {r.rushMultiplier}×
-            </span>
-            <span className="meta-pill">
-              Complexity: {r.complexityMultiplier.toFixed(2)}×
-            </span>
-            {r.riskBuffer > 1 && (
-              <span className="meta-pill meta-pill--warn">
-                Risk buffer: +{Math.round((r.riskBuffer - 1) * 100)}%
-              </span>
-            )}
+            <div className="hero-divider" />
+            <div className="hero-stat">
+              <span className="stat-label">Day rate</span>
+              <span className="stat-value">£750</span>
+            </div>
           </div>
         </section>
 
@@ -201,18 +191,8 @@ export default function ResultsDashboard({ service, category, results: r, onRese
         <section className="results-card">
           <h3 className="card-title">Complexity & Risk</h3>
           <div className="scores-wrap">
-            <ScoreBar
-              label="Complexity"
-              score={r.complexityScore}
-              level={r.complexityLevel}
-              color={complexityColor}
-            />
-            <ScoreBar
-              label="Risk"
-              score={r.riskScore}
-              level={r.riskLevel}
-              color={riskColor}
-            />
+            <ScoreBar label="Complexity" score={r.complexityScore} level={r.complexityLevel} color={complexityColor} />
+            <ScoreBar label="Risk" score={r.riskScore} level={r.riskLevel} color={riskColor} />
           </div>
           <div className="scope-creep-wrap">
             <span className="scope-label">Scope creep risk</span>
@@ -242,7 +222,7 @@ export default function ResultsDashboard({ service, category, results: r, onRese
               <span className="fit-sub">
                 {r.clientFit.score >= 8 ? 'Strong alignment — proceed with confidence.' :
                   r.clientFit.score >= 6 ? 'Reasonable fit — address flagged risks before signing.' :
-                  r.clientFit.score >= 4 ? 'Marginal fit — consider whether this project aligns with Blinc\'s ideal client.' :
+                  r.clientFit.score >= 4 ? "Marginal fit — consider whether this aligns with Blinc's ideal client." :
                   'Poor fit — significant risks present. Proceed only with strong safeguards.'}
               </span>
             </div>
@@ -254,9 +234,7 @@ export default function ResultsDashboard({ service, category, results: r, onRese
           <section className="results-card">
             <h3 className="card-title">Flags & Warnings</h3>
             <div className="flags-list">
-              {r.flags.map((flag, i) => (
-                <FlagBadge key={i} flag={flag} />
-              ))}
+              {r.flags.map((flag, i) => <FlagBadge key={i} flag={flag} />)}
             </div>
           </section>
         )}

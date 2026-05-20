@@ -1,40 +1,18 @@
-const DAY_RATE = 750
-
-const RUSH_MULTIPLIERS = {
-  relaxed: 1.0,
-  moderate: 1.1,
-  urgent: 1.3,
-  asap: 1.5,
-}
-
-export function calculatePricing({ complexityScore, riskScore, rushValue, minDays, maxDays }) {
-  const complexityMultiplier = 1 + (complexityScore / 100) * 0.65
-  const rushMultiplier = RUSH_MULTIPLIERS[rushValue] ?? 1.0
-
-  let riskBuffer = 1.0
-  if (riskScore >= 75) riskBuffer = 1.25
-  else if (riskScore >= 50) riskBuffer = 1.15
-
-  const adjMinDays = minDays * complexityMultiplier
-  const adjMaxDays = maxDays * complexityMultiplier
-
-  const minPrice = adjMinDays * DAY_RATE * rushMultiplier * riskBuffer
-  const maxPrice = adjMaxDays * DAY_RATE * rushMultiplier * riskBuffer
-
-  const recommended = Math.round((minPrice * 0.4 + maxPrice * 0.6) / 100) * 100
-
-  const effortDays = Math.round((adjMinDays + adjMaxDays) / 2)
+export function calculatePricing({ fixedPrice, fromPrice, monthly, minCommitment, minDays, maxDays }) {
+  const effortDays = Math.round((minDays + maxDays) / 2)
   const timelineWeeks = Math.ceil(effortDays / 3)
+  const minTotal = monthly && minCommitment ? fixedPrice * minCommitment : null
 
   return {
-    minPrice: Math.round(minPrice / 100) * 100,
-    maxPrice: Math.round(maxPrice / 100) * 100,
-    recommended,
+    recommended: fixedPrice,
+    minPrice: fixedPrice,
+    maxPrice: fixedPrice,
+    fromPrice: fromPrice || false,
+    monthly: monthly || false,
+    minCommitment: minCommitment || null,
+    minTotal,
     effortDays,
     timelineWeeks,
-    complexityMultiplier,
-    rushMultiplier,
-    riskBuffer,
   }
 }
 
