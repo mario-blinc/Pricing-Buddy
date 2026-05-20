@@ -23,8 +23,21 @@ export default function App() {
   }
 
   function handleWizardComplete(finalAnswers) {
-    const questions = getQuestions(selectedCategory)
+    const questions = getQuestions(selectedCategory, selectedService.id)
     const { complexityScore, riskScore } = calculateScores(finalAnswers, questions)
+
+    // Extract add-on selections and calculate total
+    const addonItems = questions
+      .filter(q => q.isAddon)
+      .map(q => {
+        const answer = finalAnswers[q.id]
+        const option = q.options.find(o => o.value === answer)
+        if (!option || !option.addonPrice) return null
+        return { label: q.addonLabel, price: option.addonPrice }
+      })
+      .filter(Boolean)
+    const addonTotal = addonItems.reduce((sum, item) => sum + item.price, 0)
+
     const pricing = calculatePricing({
       fixedPrice: selectedService.fixedPrice,
       fromPrice: selectedService.fromPrice,
@@ -32,6 +45,8 @@ export default function App() {
       minCommitment: selectedService.minCommitment,
       minDays: selectedService.minDays,
       maxDays: selectedService.maxDays,
+      addonItems,
+      addonTotal,
     })
     const paymentStructure = getPaymentStructure(riskScore)
     const flags = generateFlags(finalAnswers, selectedCategory, selectedService.id)

@@ -299,6 +299,20 @@ button {
   letter-spacing: .07em;
   color: var(--indigo);
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.addon-badge {
+  background: var(--indigo);
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
 }
 
 .question-text {
@@ -445,6 +459,53 @@ button {
 /* Hero pricing */
 .results-hero { background: var(--indigo); border-color: var(--indigo-dark); }
 .results-hero .card-title { color: rgba(255,255,255,.6); }
+
+/* Price breakdown (with add-ons) */
+.hero-breakdown {
+  margin-bottom: 20px;
+}
+
+.breakdown-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.breakdown-label {
+  font-size: .85rem;
+  color: rgba(255,255,255,.7);
+}
+
+.breakdown-price {
+  font-size: .9rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.85);
+}
+
+.breakdown-row--addon .breakdown-label { color: rgba(255,255,255,.6); }
+.breakdown-row--addon .breakdown-price { color: rgba(255,255,255,.75); }
+
+.breakdown-divider {
+  height: 1px;
+  background: rgba(255,255,255,.2);
+  margin: 8px 0;
+}
+
+.breakdown-row--total .breakdown-label {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.65);
+}
+
+.breakdown-total-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
 
 .hero-recommended {
   display: flex;

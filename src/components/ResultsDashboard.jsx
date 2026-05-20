@@ -157,11 +157,36 @@ export default function ResultsDashboard({ service, category, results: r, onRese
 
         {/* Price Hero */}
         <section className="results-card results-hero">
-          <div className="hero-recommended">
-            {priceLabel === 'from' && <span className="hero-from-label">from</span>}
-            <span className="hero-price">{fmt(r.recommended)}</span>
-            {priceLabel === '/ month' && <span className="hero-suffix">/ month</span>}
-          </div>
+          {/* Price breakdown for packages with add-ons */}
+          {r.addonItems && r.addonItems.length > 0 ? (
+            <div className="hero-breakdown">
+              <div className="breakdown-row breakdown-row--base">
+                <span className="breakdown-label">Base package</span>
+                <span className="breakdown-price">{fmt(r.basePrice)}{r.monthly ? '/mo' : ''}</span>
+              </div>
+              {r.addonItems.map((item, i) => (
+                <div key={i} className="breakdown-row breakdown-row--addon">
+                  <span className="breakdown-label">+ {item.label}</span>
+                  <span className="breakdown-price">+{fmt(item.price)}{r.monthly ? '/mo' : ''}</span>
+                </div>
+              ))}
+              <div className="breakdown-divider" />
+              <div className="breakdown-row breakdown-row--total">
+                <span className="breakdown-label">Total</span>
+                <div className="breakdown-total-price">
+                  {priceLabel === 'from' && <span className="hero-from-label">from</span>}
+                  <span className="hero-price">{fmt(r.recommended)}</span>
+                  {priceLabel === '/ month' && <span className="hero-suffix">/mo</span>}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="hero-recommended">
+              {priceLabel === 'from' && <span className="hero-from-label">from</span>}
+              <span className="hero-price">{fmt(r.recommended)}</span>
+              {priceLabel === '/ month' && <span className="hero-suffix">/ month</span>}
+            </div>
+          )}
 
           {r.monthly && r.minTotal && (
             <div className="hero-commitment">

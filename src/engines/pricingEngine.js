@@ -1,12 +1,16 @@
-export function calculatePricing({ fixedPrice, fromPrice, monthly, minCommitment, minDays, maxDays }) {
+export function calculatePricing({ fixedPrice, fromPrice, monthly, minCommitment, minDays, maxDays, addonItems, addonTotal }) {
+  const totalPrice = fixedPrice + (addonTotal || 0)
   const effortDays = Math.round((minDays + maxDays) / 2)
   const timelineWeeks = Math.ceil(effortDays / 3)
-  const minTotal = monthly && minCommitment ? fixedPrice * minCommitment : null
+  const minTotal = monthly && minCommitment ? totalPrice * minCommitment : null
 
   return {
-    recommended: fixedPrice,
-    minPrice: fixedPrice,
-    maxPrice: fixedPrice,
+    recommended: totalPrice,
+    basePrice: fixedPrice,
+    addonItems: addonItems || [],
+    addonTotal: addonTotal || 0,
+    minPrice: totalPrice,
+    maxPrice: totalPrice,
     fromPrice: fromPrice || false,
     monthly: monthly || false,
     minCommitment: minCommitment || null,

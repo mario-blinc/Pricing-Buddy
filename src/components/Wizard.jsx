@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getQuestions } from '../data/questions'
 
 export default function Wizard({ category, service, onComplete, onBack }) {
-  const questions = getQuestions(category)
+  const questions = getQuestions(category, service.id)
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState({})
   const [animKey, setAnimKey] = useState(0)
@@ -12,6 +12,7 @@ export default function Wizard({ category, service, onComplete, onBack }) {
   const progress = ((step) / total) * 100
   const selectedValue = answers[current.id]
   const canAdvance = !!selectedValue
+  const isAddon = !!current.isAddon
 
   function handleAnswer(value) {
     setAnswers(prev => ({ ...prev, [current.id]: value }))
@@ -55,7 +56,12 @@ export default function Wizard({ category, service, onComplete, onBack }) {
 
       <main className="wizard-main">
         <div className="question-wrap" key={animKey}>
-          <div className="step-indicator">Question {step + 1} of {total}</div>
+          <div className="step-indicator">
+            {isAddon
+              ? <><span className="addon-badge">Add-on</span> affects total price</>
+              : `Question ${step + 1} of ${total}`
+            }
+          </div>
           <h2 className="question-text">{current.question}</h2>
           {current.hint && (
             <p className="question-hint">{current.hint}</p>

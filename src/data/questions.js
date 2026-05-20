@@ -273,9 +273,89 @@ export const SOCIAL_QUESTIONS = [
   },
 ]
 
-export function getQuestions(category) {
+function getSocialAddOns(serviceId) {
+  const addons = []
+
+  // Platform management — NOT included in Essential or Core
+  if (serviceId !== 'signature') {
+    addons.push({
+      id: 'addon_platform_mgmt',
+      question: 'Is monthly platform management required?',
+      hint: 'Scheduling, posting, caption formatting, hashtag optimisation, basic moderation — up to 3 platforms',
+      isAddon: true,
+      addonLabel: 'Platform Management',
+      options: [
+        { label: 'Not required', value: 'none', addonPrice: 0, complexityPoints: 0, riskPoints: 0 },
+        { label: 'Yes — up to 3 platforms  (+£500/mo)', value: 'yes', addonPrice: 500, complexityPoints: 5, riskPoints: 0 },
+      ],
+    })
+  }
+
+  // Content shoot — varies by package
+  if (serviceId === 'essential') {
+    addons.push({
+      id: 'addon_shoot',
+      question: 'Is a monthly content shoot required?',
+      hint: 'No shoot is included in the Essential package — client provides all content',
+      isAddon: true,
+      addonLabel: 'Monthly Content Shoot',
+      options: [
+        { label: 'No shoot — client provides all content', value: 'none', addonPrice: 0, complexityPoints: 0, riskPoints: 5 },
+        { label: 'Half day shoot  (+£450/mo)', value: 'half', addonPrice: 450, complexityPoints: 10, riskPoints: 0 },
+        { label: 'Full day shoot  (+£750/mo)', value: 'full', addonPrice: 750, complexityPoints: 15, riskPoints: 0 },
+      ],
+    })
+  } else if (serviceId === 'core') {
+    addons.push({
+      id: 'addon_shoot',
+      question: 'Is an additional full day shoot required?',
+      hint: 'A ½ day shoot is already included in the Core package',
+      isAddon: true,
+      addonLabel: 'Additional Full Day Shoot',
+      options: [
+        { label: 'No — ½ day included is sufficient', value: 'none', addonPrice: 0, complexityPoints: 0, riskPoints: 0 },
+        { label: 'Yes — add a full day shoot  (+£750/mo)', value: 'full', addonPrice: 750, complexityPoints: 10, riskPoints: 0 },
+      ],
+    })
+  }
+  // Signature has full day included — no shoot add-on
+
+  // Extra deliverables — all packages (base is 6/mo)
+  addons.push({
+    id: 'addon_extra_deliverables',
+    question: 'Are additional content deliverables needed beyond the 6 per month?',
+    hint: 'Each additional deliverable is £180 (video, static, or carousel)',
+    isAddon: true,
+    addonLabel: 'Extra Deliverables',
+    options: [
+      { label: '6 per month is sufficient', value: 'none', addonPrice: 0, complexityPoints: 0, riskPoints: 0 },
+      { label: '1–2 extra  (+£180–360/mo)', value: '1-2', addonPrice: 270, complexityPoints: 5, riskPoints: 5 },
+      { label: '3+ extra  (+£540+/mo)', value: '3+', addonPrice: 540, complexityPoints: 10, riskPoints: 10 },
+    ],
+  })
+
+  // Additional platforms — Signature includes up to 3, others charge per platform
+  if (serviceId === 'signature') {
+    addons.push({
+      id: 'addon_extra_platforms',
+      question: 'Are additional platforms beyond the 3 included required?',
+      hint: 'Additional platform management is £250/platform/mo',
+      isAddon: true,
+      addonLabel: 'Extra Platforms',
+      options: [
+        { label: 'No — 3 platforms is sufficient', value: 'none', addonPrice: 0, complexityPoints: 0, riskPoints: 0 },
+        { label: '1 additional platform  (+£250/mo)', value: '1', addonPrice: 250, complexityPoints: 5, riskPoints: 0 },
+        { label: '2+ additional platforms  (+£500+/mo)', value: '2+', addonPrice: 500, complexityPoints: 10, riskPoints: 5 },
+      ],
+    })
+  }
+
+  return addons
+}
+
+export function getQuestions(category, serviceId) {
   if (category === 'branding') return BRANDING_QUESTIONS
   if (category === 'web') return WEB_QUESTIONS
-  if (category === 'social') return SOCIAL_QUESTIONS
+  if (category === 'social') return [...SOCIAL_QUESTIONS, ...getSocialAddOns(serviceId)]
   return []
 }
